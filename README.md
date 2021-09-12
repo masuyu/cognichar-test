@@ -1,3 +1,11 @@
+# cognichar-test
+
+認知特定テストのフロントエンドです。
+
+- 35 問のテスト項目に回答できる
+- 回答を元に各項目の得点と認知特性を返却します
+- 過去回答したことがあれば再度結果だけを閲覧できます。
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
