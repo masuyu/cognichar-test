@@ -18,9 +18,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "tailwind build src/css/styles.css -o src/css/tailwind.css && react-scripts start",
-    "build": "export NODE_ENV=production && rollup -c",
-    "twbuild": "tailwind build src/css/styles.css -o src/css/tailwind.css",
+    "start": "react-scripts start",
+    "build": "tailwind build src/css/style.css -o src/css/tailwind.css && export NODE_ENV=production && rollup -c",
+    "twbuild": "tailwind build src/css/style.css -o src/css/tailwind.css",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
