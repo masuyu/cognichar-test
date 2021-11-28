@@ -1,4 +1,4 @@
-const Header = ({text}) => {
+const Header = ({ text }) => {
   return (
     <section className='py-4'>
       <p className='text-2xl text-white'>
