@@ -1,11 +1,12 @@
 import Header from './Header.js';
+import HeaderWrapper from './HeaderWrapper.js';
 
 const MainContainer = ({ content }) => {
   return (
       <div className="App">
-        <div className="px-10 lg:px-60 xl:px-80 bg-green-300">
+        <HeaderWrapper MarginPaddingString="px-10 lg:px-60 xl:px-80" color="bg-green-300">
           <Header text='Cognichar - 認知特性テスト'/>
-        </div>
+        </HeaderWrapper>
 
         <section className="px-10 lg:px-60 xl:px-80 mt-10">
           {content}

@@ -24,8 +24,8 @@ const App = () => {
         <QuestionList parameter={questionList} />
 
         <div className="flex justify-between my-10">
-          <button className="" onClick={preQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="" onClick={nextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
         </div>
       </>
     )
@@ -83,13 +83,11 @@ const App = () => {
     }
   }
 
-  const preQuestion = () => {
-    console.log(currentQuestionId)
+  const handlePreQuestion = () => {
     setCurrentQuestionId(currentQuestionId - 1)
   }
 
-  const nextQuestion = () => {
-    console.log(currentQuestionId)
+  const handleNextQuestion = () => {
     setCurrentQuestionId(currentQuestionId + 1)
   }
 
