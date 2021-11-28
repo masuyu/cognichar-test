@@ -7,6 +7,7 @@ import myConfig from "../myConfig.json";
 const App = () => {
   const [ questionList, setQuestionList ] = useState([])
   const [ currentQuestionId, setCurrentQuestionId ] = useState(0)
+  const [ answerList, setAnswerList ] = useState([]);
   const [ isDoneLoad, setIsDoneLoad ] = useState(false)
 
   useEffect(() => {
@@ -18,14 +19,32 @@ const App = () => {
         })
   }, [])
 
+  const ButtonArea = () => {
+    if (answerList.length === questionList.length) {
+      return (
+        <>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" >結果へ</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
+        </>
+      )
+    }
+  }
+
   const QuestionBase = () => {
     return (
       <>
         <QuestionList parameter={questionList} />
 
         <div className="flex justify-between my-10">
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
+          <ButtonArea />
         </div>
       </>
     )
@@ -44,12 +63,12 @@ const App = () => {
     return (
       <div className="px-3 py-3 border-2 border-2 rounded-xl">
           <h1 className="text-xl py-1">Question. {output.id}</h1>
-          <div className="py-10 flex justify-center">
-            <p className="mx-10">
+          <div className="py-10 flex justify-center h-32">
+            <p className="mx-10 ">
               {output.text}
             </p>
           </div>
-          <div className="px-2.5">
+          <div className="px-2.5 h-80">
             <ul>
               <AnswersChoiceList answerChoices={output.answer_choices} />
             </ul>
@@ -62,7 +81,7 @@ const App = () => {
     return answerChoices.map(answerChoice => {
       return (
         <li key={answerChoice.question_id + "-" + answerChoice.id}>
-          <div className="mx-20 my-5 px-2 py-2 border-0 rounded-xl bg-green-300">
+          <div className="mx-20 my-5 px-2 py-2 border-0 rounded-xl bg-green-300" onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}>
             <p>
               {answerChoice.text}
             </p>
@@ -71,6 +90,7 @@ const App = () => {
       )
     })
   }
+
   const Content = () => {
     if (currentQuestionId === 0) {
       return (
@@ -89,6 +109,22 @@ const App = () => {
 
   const handleNextQuestion = () => {
     setCurrentQuestionId(currentQuestionId + 1)
+  }
+
+  const handleSetAnswer = (questionId ,answerChoiceId) => {
+    const answerObject = {
+      questionId: questionId,
+      answerChoiceId: answerChoiceId,
+    }
+    let cheaked = answerList.filter((e) => {
+      return e.questionId !== questionId
+    })
+    cheaked.push(answerObject)
+    setAnswerList(cheaked)
+    console.log(cheaked);
+    if (questionId + 1 <= questionList.length) {
+      setCurrentQuestionId(questionId + 1)
+    }
   }
 
   return (
