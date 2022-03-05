@@ -2,13 +2,35 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TopPage from './TopPage.js';
 import MainContainer from './MainContainer.js';
+import ResultPage from './ResultPage.js';
 import myConfig from "../myConfig.json";
+
+const fetchResultToLambda = async (answerList) => {
+  const answers = answerList.map((e) => {
+    return e.answerChoiceId.toString(10)
+  })
+  const payload = {answers: answers};
+  const headers = {
+    "Content-Type": "application/json"
+  };
+
+  const res = await axios
+    .post(myConfig.scorebordApiPath, payload, headers)
+    .then(response => {
+       return JSON.parse(response.data.body);
+    });
+
+  return res
+}
 
 const App = () => {
   const [ questionList, setQuestionList ] = useState([])
   const [ currentQuestionId, setCurrentQuestionId ] = useState(0)
-  const [ answerList, setAnswerList ] = useState([]);
+  const [ answerList, setAnswerList ] = useState([])
+  const [ postAnswerList, setPostAnswerList] = useState([]);
   const [ isDoneLoad, setIsDoneLoad ] = useState(false)
+  const [ isDoneAnswer, setIsDoneAnswer ] = useState(false)
+  const [ result, setResult ] = useState(null)
 
   useEffect(() => {
     axios
@@ -17,15 +39,23 @@ const App = () => {
           setQuestionList(response.data)
           setIsDoneLoad(true)
         })
-  }, [])
+
+
+    if (isDoneAnswer) {
+        (async() => {
+          const res = await fetchResultToLambda(postAnswerList);
+          setResult(res)
+        })()
+    }
+
+  }, [postAnswerList, isDoneAnswer])
 
   const ButtonArea = () => {
     if (answerList.length === questionList.length) {
       return (
         <>
           <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" >結果へ</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
+          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
         </>
       )
     } else {
@@ -96,6 +126,10 @@ const App = () => {
       return (
         <TopPage setCurrentQuestionId={setCurrentQuestionId} isDoneLoad={isDoneLoad} />
       )
+    } else if (result) {
+      return (
+        <ResultPage resultDate={result} />
+      )
     } else {
       return (
         <QuestionBase />
@@ -121,10 +155,14 @@ const App = () => {
     })
     cheaked.push(answerObject)
     setAnswerList(cheaked)
-    console.log(cheaked);
     if (questionId + 1 <= questionList.length) {
       setCurrentQuestionId(questionId + 1)
     }
+  }
+
+  const handleSubmitScorebord = () => {
+    setPostAnswerList(answerList);
+    setIsDoneAnswer(true)
   }
 
   return (
