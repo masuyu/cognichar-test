@@ -51,19 +51,43 @@ const App = () => {
   }, [postAnswerList, isDoneAnswer])
 
   const ButtonArea = () => {
+    const isAllowPre = () => {
+      return currentQuestionId - 1 > 0
+    }
+    const preButtonStyle = isAllowPre()
+      ? "px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
+      : "px-4 py-1 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
+
+
+    const isAllowNext = () => {
+      const copyAnswerList = answerList.slice()
+      const countable = copyAnswerList.filter((e) => {
+        return e.questionId === currentQuestionId
+      })
+      return currentQuestionId + 1 <= questionList.length && countable.length >= 1
+    }
+    const nextButtonStyle = isAllowNext()
+      ? "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
+      : "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
+
     if (answerList.length === questionList.length) {
       return (
-        <>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
-        </>
+        <div className="flex justify-between">
+          <div>
+            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
+            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
+          </div>
+          <button className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
+        </div>
       )
     } else {
       return (
-        <>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
-        </>
+        <div className="flex justify-between">
+          <div>
+            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
+            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
+          </div>
+        </div>
       )
     }
   }
@@ -71,11 +95,9 @@ const App = () => {
   const QuestionBase = () => {
     return (
       <>
-        <QuestionList parameter={questionList} />
+        <ButtonArea />
 
-        <div className="flex justify-between my-10">
-          <ButtonArea />
-        </div>
+        <QuestionList parameter={questionList} />
       </>
     )
   }
@@ -83,7 +105,7 @@ const App = () => {
   const QuestionList = ({parameter}) => {
     let question = parameter.find(question => question.id === currentQuestionId)
     return (
-      <div className="mt-10">
+      <div>
         <Question output={question} />
       </div>
     )
@@ -91,15 +113,15 @@ const App = () => {
 
   const Question = ({output}) => {
     return (
-      <div className="px-3 py-3 border-2 border-2 rounded-xl">
+      <div>
           <h1 className="text-xl py-1">Question. {output.id}</h1>
-          <div className="py-10 flex justify-center h-32">
-            <p className="mx-10 ">
-              {output.text}
-            </p>
+          <div className="w-full pt-2 pb-10 flex justify-center h-48">
+            <div className="w-full p-4 border-2 border-2 rounded-xl">
+              <p>{output.text}</p>
+            </div>
           </div>
           <div className="px-2.5 h-80">
-            <ul>
+            <ul className="flex justify-around">
               <AnswersChoiceList answerChoices={output.answer_choices} />
             </ul>
           </div>
@@ -110,8 +132,11 @@ const App = () => {
   const AnswersChoiceList = ({answerChoices}) => {
     return answerChoices.map(answerChoice => {
       return (
-        <li key={answerChoice.question_id + "-" + answerChoice.id}>
-          <div className="mx-20 my-5 px-2 py-2 border-0 rounded-xl bg-green-300" onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}>
+        <li
+          key={answerChoice.question_id + "-" + answerChoice.id}
+          className="w-1/4"
+        >
+          <div className="mx-2 px-2 py-2 h-56 border-0 rounded-xl bg-green-300 cursor-pointer" onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}>
             <p>
               {answerChoice.text}
             </p>
