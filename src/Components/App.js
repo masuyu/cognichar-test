@@ -51,19 +51,43 @@ const App = () => {
   }, [postAnswerList, isDoneAnswer])
 
   const ButtonArea = () => {
+    const isAllowPre = () => {
+      return currentQuestionId - 1 > 0
+    }
+    const preButtonStyle = isAllowPre()
+      ? "px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
+      : "px-4 py-1 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
+
+
+    const isAllowNext = () => {
+      const copyAnswerList = answerList.slice()
+      const countable = copyAnswerList.filter((e) => {
+        return e.questionId === currentQuestionId
+      })
+      return currentQuestionId + 1 <= questionList.length && countable.length >= 1
+    }
+    const nextButtonStyle = isAllowNext()
+      ? "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
+      : "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
+
     if (answerList.length === questionList.length) {
       return (
-        <>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
-        </>
+        <div className="flex justify-between">
+          <div>
+            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
+            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
+          </div>
+          <button className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
+        </div>
       )
     } else {
       return (
-        <>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handlePreQuestion} disabled={currentQuestionId - 1 <= 0}>Pre</button>
-          <button className="px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white" onClick={handleNextQuestion} disabled={currentQuestionId + 1 > questionList.length}>Next</button>
-        </>
+        <div className="flex justify-between">
+          <div>
+            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
+            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
+          </div>
+        </div>
       )
     }
   }
@@ -71,9 +95,7 @@ const App = () => {
   const QuestionBase = () => {
     return (
       <>
-        <div className="flex justify-between">
-          <ButtonArea />
-        </div>
+        <ButtonArea />
 
         <QuestionList parameter={questionList} />
       </>
