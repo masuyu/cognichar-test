@@ -7,7 +7,7 @@ const TopPage = ({ setCurrentQuestionId, isDoneLoad }) => {
     <div>
       <div className="lg:px-1 lg:px-20 xl:px-40 2xl:px-64">
         <section>
-          <div className="py-5 mx-3">
+          <div className="py-5">
             <p>このページは３５問の質問に答えることで</p>
             <p>あなたの認知特性がわかるテストアプリです。</p>
           </div>

@@ -120,8 +120,8 @@ const App = () => {
               <p>{output.text}</p>
             </div>
           </div>
-          <div className="px-2.5 h-80">
-            <ul className="flex justify-around">
+          <div className="mx-5 h-80">
+            <ul className="">
               <AnswersChoiceList answerChoices={output.answer_choices} />
             </ul>
           </div>
@@ -133,10 +133,13 @@ const App = () => {
     return answerChoices.map(answerChoice => {
       return (
         <li
+          className="box-border w-full mb-4"
           key={answerChoice.question_id + "-" + answerChoice.id}
-          className="w-1/4"
         >
-          <div className="mx-2 px-2 py-2 h-56 border-0 rounded-xl bg-green-300 cursor-pointer" onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}>
+          <div
+            className="box-border px-2 py-2 h-16 w-full border-0 rounded-xl bg-green-300 cursor-pointer flex items-center"
+            onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}
+          >
             <p>
               {answerChoice.text}
             </p>
