@@ -1,15 +1,12 @@
-import Header from './Header.js';
-import HeaderWrapper from './HeaderWrapper.js';
+import Header from "./ui-parts/Header/index.js";
 
-const MainContainer = ({ content }) => {
+const MainContainer = ({children}) => {
   return (
       <div className="App">
-        <HeaderWrapper MarginPaddingString="px-5 lg:px-36 xl:px-48 2xl:px-64" color="bg-green-300">
-          <Header text='Cognichar - 認知特性テスト'/>
-        </HeaderWrapper>
+        <Header />
 
         <section className="px-5 lg:px-36 xl:px-48 2xl:px-64 mt-8">
-          {content}
+          {children}
         </section>
       </div>
   )

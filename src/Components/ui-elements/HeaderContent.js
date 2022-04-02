@@ -1,4 +1,5 @@
-const Header = ({ text }) => {
+const HeaderContent = ({ text }) => {
+
   return (
     <section className='py-4'>
       <p className='text-2xl text-white'>
@@ -8,4 +9,4 @@ const Header = ({ text }) => {
   )
 }
 
-export default Header;
+export default HeaderContent;
