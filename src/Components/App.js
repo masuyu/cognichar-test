@@ -77,7 +77,7 @@ const App = () => {
             <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
             <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
           </div>
-          <button className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
+          <button className="text-center px-4 py-1 w-2/3 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white" onClick={handleSubmitScorebord} >全問解答しました！ 結果へ</button>
         </div>
       )
     } else {
