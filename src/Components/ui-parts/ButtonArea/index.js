@@ -1,4 +1,4 @@
-import FlexBetweenWrapper from "./ui-elements/FlexBetweenWrapper"
+import FlexBetweenWrapper from "../../ui-elements/FlexBetweenWrapper"
 
 const ButtonArea = ({
   currentQuestionId,

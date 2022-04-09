@@ -1,4 +1,4 @@
-import ButtonArea from "../../ButtonArea";
+import ButtonArea from "../../ui-parts/ButtonArea";
 
 const QuestionPage = ({
   currentQuestionId,
