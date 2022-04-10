@@ -1,4 +1,5 @@
 import ScoreRadarChart from "../../ui-parts/ScoreRadarChart"
+import ResultSummary from "../../ui-parts/ResultSummary"
 
 const CognicharType = {
   camera: "写真タイプ",
@@ -20,6 +21,8 @@ const ResultPage = ({resultDate}) => {
       </div>
 
       <ScoreRadarChart scoreData={resultDate.total_score} />
+
+      <ResultSummary congnicharType={resultDate.cognichar_type}/>
     </div>
   )
 }
