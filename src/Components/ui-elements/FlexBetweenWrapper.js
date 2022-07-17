@@ -1,6 +1,8 @@
-const FlexBetweenWrapper = ({children}) => {
+const FlexBetweenWrapper = ({justifyContentDirective, children}) => {
+  const flexClassString = "flex justify-" + justifyContentDirective
+
   return (
-    <div className="flex justify-between">
+    <div className={flexClassString}>
       {children}
     </div>
   )
