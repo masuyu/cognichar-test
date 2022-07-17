@@ -4,6 +4,8 @@ module.exports = {
     content: [
       './src/*.js',
       './src/Components/*.js',
+      './src/Components/*/*.js',
+      './src/Components/*/*/*.js',
     ],
     options: {
       whitelist: ['justify-start', 'justify-end', 'justify-center', 'justify-btween', 'justify-around', 'justify-evenly']
