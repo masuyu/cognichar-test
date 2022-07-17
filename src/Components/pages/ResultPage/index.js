@@ -1,5 +1,6 @@
 import ScoreRadarChart from "../../ui-parts/ScoreRadarChart"
 import ResultSummary from "../../ui-parts/ResultSummary"
+import FlexBetweenWrapper from "../../ui-elements/FlexBetweenWrapper"
 
 const CognicharType = {
   camera: "写真タイプ",
@@ -15,14 +16,20 @@ const ResultPage = ({resultDate}) => {
   const typeName = CognicharType[resultDate.cognichar_type]
 
   return (
-    <div>
+    <div className="lg:px-1 lg:px-20 xl:px-40 2xl:px-64">
       <div>
         あなたは {typeName} です。
       </div>
 
-      <ScoreRadarChart scoreData={resultDate.total_score} />
+      <div className="lg:px-1 lg:px-20 xl:px-40 2xl:px-64">
+        <ScoreRadarChart scoreData={resultDate.total_score} />
+      </div>
 
       <ResultSummary congnicharType={resultDate.cognichar_type}/>
+
+      <FlexBetweenWrapper justifyContentDirective='center'>
+        <a href="/" className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white">戻る</a>
+      </FlexBetweenWrapper>
     </div>
   )
 }
