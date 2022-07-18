@@ -45,7 +45,7 @@ const ButtonArea = ({
 
   if (answerList.length === questionList.length) {
     return (
-      <FlexBetweenWrapper>
+      <FlexBetweenWrapper justifyContentDirective="between">
         <div>
           <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
           <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
@@ -55,7 +55,7 @@ const ButtonArea = ({
     )
   } else {
     return (
-      <FlexBetweenWrapper>
+      <FlexBetweenWrapper justifyContentDirective="between">
         <div>
           <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
           <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>

@@ -1,6 +1,29 @@
-const TopPage = ({ setCurrentQuestionId, isDoneLoad }) => {
+import FlexBetweenWrapper from "../../ui-elements/FlexBetweenWrapper"
+
+const TopPage = ({ setCurrentQuestionId, setResult, preResult}) => {
   const handleSetCurrentQuestionId = () => {
-    setCurrentQuestionId(1);
+    setCurrentQuestionId(1)
+  }
+
+  const handleSetPreResult = () => {
+    const res = JSON.parse(preResult)
+
+    setResult(res)
+  }
+
+  const PreResultLink = () => {
+    if (preResult) {
+      return (
+        <FlexBetweenWrapper justifyContentDirective={"end"}>
+          <div className="pt-16">
+            <p>
+              <span className="text-sm">以前のテスト結果があります</span>
+              <a href="#/" onClick={handleSetPreResult} className="px-4 py-1 text-blue-600 cursor-pointer">&gt;前回の結果をみる</a>
+            </p>
+          </div>
+        </FlexBetweenWrapper>
+      )
+    }
   }
 
   return (
@@ -22,11 +45,12 @@ const TopPage = ({ setCurrentQuestionId, isDoneLoad }) => {
             <p>効率のいい情報の取得方法・学習方法を発見できます。</p>
           </div>
         </section>
-        <section className="flex justify-center">
+        <FlexBetweenWrapper justifyContentDirective={"around"}>
           <div className="py-5">
-            <a href="#/" onClick={handleSetCurrentQuestionId} className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white">診断結果へ</a>
+            <a href="#/" onClick={handleSetCurrentQuestionId} className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white">診断スタート</a>
           </div>
-        </section>
+        </FlexBetweenWrapper>
+        <PreResultLink />
       </div>
     </div>
   )

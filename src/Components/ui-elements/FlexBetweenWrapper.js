@@ -1,8 +1,21 @@
 const FlexBetweenWrapper = ({justifyContentDirective, children}) => {
-  const flexClassString = "flex justify-" + justifyContentDirective
+  const justifyContentStringList = {
+    'start': 'justify-start',
+    'end': 'justify-end',
+    'center': 'justify-center',
+    'between': 'justify-between',
+    'around': 'justify-around',
+    'evenly': 'justify-evenly'
+  }
+
+  const justifyContentString = justifyContentStringList.hasOwnProperty(justifyContentDirective)
+    ? justifyContentStringList[justifyContentDirective]
+    : justifyContentStringList['start']
+
+  const style = "flex " + justifyContentString
 
   return (
-    <div className={flexClassString}>
+    <div className={style}>
       {children}
     </div>
   )

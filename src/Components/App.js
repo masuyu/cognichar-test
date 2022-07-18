@@ -5,6 +5,7 @@ import myConfig from "../myConfig.json";
 import TopPage from './pages/TopPage/index.js';
 import ResultPage from './pages/ResultPage/index.js';
 import QuestionPage from './pages/QuestionPage/index.js';
+import localstragekey from '../localstragekey.json';
 
 const fetchResultToLambda = async (answerList) => {
   const answers = answerList.map((e) => {
@@ -29,7 +30,6 @@ const App = () => {
   const [ currentQuestionId, setCurrentQuestionId ] = useState(0)
   const [ answerList, setAnswerList ] = useState([])
   const [ postAnswerList, setPostAnswerList] = useState([]);
-  const [ isDoneLoad, setIsDoneLoad ] = useState(false)
   const [ isDoneAnswer, setIsDoneAnswer ] = useState(false)
   const [ result, setResult ] = useState(null)
 
@@ -38,27 +38,29 @@ const App = () => {
         .get(myConfig.questionApiPath)
         .then(response => {
           setQuestionList(response.data)
-          setIsDoneLoad(true)
         })
 
 
     if (isDoneAnswer) {
         (async() => {
           const res = await fetchResultToLambda(postAnswerList);
+          localStorage.setItem(localstragekey.name, JSON.stringify(res))
           setResult(res)
         })()
     }
 
   }, [postAnswerList, isDoneAnswer])
 
+  const preResult = localStorage.getItem(localstragekey.name) ?? {};
+
   const Content = () => {
-    if (currentQuestionId === 0) {
-      return (
-        <TopPage setCurrentQuestionId={setCurrentQuestionId} isDoneLoad={isDoneLoad} />
-      )
-    } else if (result) {
+    if (result) {
       return (
         <ResultPage resultDate={result} />
+      )
+    } else if (currentQuestionId === 0) {
+      return (
+        <TopPage setCurrentQuestionId={setCurrentQuestionId} setResult={setResult} preResult={preResult} />
       )
     } else {
       return (
