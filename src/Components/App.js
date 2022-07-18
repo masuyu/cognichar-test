@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import TopPage from './TopPage.js';
 import MainContainer from './MainContainer.js';
-import ResultPage from './ResultPage.js';
 import myConfig from "../myConfig.json";
+import TopPage from './pages/TopPage/index.js';
+import ResultPage from './pages/ResultPage/index.js';
+import QuestionPage from './pages/QuestionPage/index.js';
+import localstragekey from '../localstragekey.json';
 
 const fetchResultToLambda = async (answerList) => {
   const answers = answerList.map((e) => {
@@ -28,7 +30,6 @@ const App = () => {
   const [ currentQuestionId, setCurrentQuestionId ] = useState(0)
   const [ answerList, setAnswerList ] = useState([])
   const [ postAnswerList, setPostAnswerList] = useState([]);
-  const [ isDoneLoad, setIsDoneLoad ] = useState(false)
   const [ isDoneAnswer, setIsDoneAnswer ] = useState(false)
   const [ result, setResult ] = useState(null)
 
@@ -37,161 +38,49 @@ const App = () => {
         .get(myConfig.questionApiPath)
         .then(response => {
           setQuestionList(response.data)
-          setIsDoneLoad(true)
         })
 
 
     if (isDoneAnswer) {
         (async() => {
           const res = await fetchResultToLambda(postAnswerList);
+          localStorage.setItem(localstragekey.name, JSON.stringify(res))
           setResult(res)
         })()
     }
 
   }, [postAnswerList, isDoneAnswer])
 
-  const ButtonArea = () => {
-    const isAllowPre = () => {
-      return currentQuestionId - 1 > 0
-    }
-    const preButtonStyle = isAllowPre()
-      ? "px-4 py-1 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
-      : "px-4 py-1 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
-
-
-    const isAllowNext = () => {
-      const copyAnswerList = answerList.slice()
-      const countable = copyAnswerList.filter((e) => {
-        return e.questionId === currentQuestionId
-      })
-      return currentQuestionId + 1 <= questionList.length && countable.length >= 1
-    }
-    const nextButtonStyle = isAllowNext()
-      ? "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-600 hover:bg-gray-200 text-white"
-      : "px-4 py-1 ml-4 border-0 rounded-xl bg-gray-200 text-white cursor-not-allowed"
-
-    if (answerList.length === questionList.length) {
-      return (
-        <div className="flex justify-between">
-          <div>
-            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
-            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
-          </div>
-          <button className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white" onClick={handleSubmitScorebord} >結果へ</button>
-        </div>
-      )
-    } else {
-      return (
-        <div className="flex justify-between">
-          <div>
-            <button className={preButtonStyle} onClick={handlePreQuestion} disabled={!isAllowPre()}>Pre</button>
-            <button className={nextButtonStyle} onClick={handleNextQuestion} disabled={!isAllowNext()}>Next</button>
-          </div>
-        </div>
-      )
-    }
-  }
-
-  const QuestionBase = () => {
-    return (
-      <>
-        <ButtonArea />
-
-        <QuestionList parameter={questionList} />
-      </>
-    )
-  }
-
-  const QuestionList = ({parameter}) => {
-    let question = parameter.find(question => question.id === currentQuestionId)
-    return (
-      <div>
-        <Question output={question} />
-      </div>
-    )
-  }
-
-  const Question = ({output}) => {
-    return (
-      <div>
-          <h1 className="text-xl py-1">Question. {output.id}</h1>
-          <div className="w-full pt-2 pb-10 flex justify-center h-48">
-            <div className="w-full p-4 border-2 border-2 rounded-xl">
-              <p>{output.text}</p>
-            </div>
-          </div>
-          <div className="px-2.5 h-80">
-            <ul className="flex justify-around">
-              <AnswersChoiceList answerChoices={output.answer_choices} />
-            </ul>
-          </div>
-      </div>
-    )
-  }
-
-  const AnswersChoiceList = ({answerChoices}) => {
-    return answerChoices.map(answerChoice => {
-      return (
-        <li
-          key={answerChoice.question_id + "-" + answerChoice.id}
-          className="w-1/4"
-        >
-          <div className="mx-2 px-2 py-2 h-56 border-0 rounded-xl bg-green-300 cursor-pointer" onClick={()=>handleSetAnswer(answerChoice.question_id, answerChoice.id)}>
-            <p>
-              {answerChoice.text}
-            </p>
-          </div>
-        </li>
-      )
-    })
-  }
+  const preResult = localStorage.getItem(localstragekey.name) ?? {};
 
   const Content = () => {
-    if (currentQuestionId === 0) {
-      return (
-        <TopPage setCurrentQuestionId={setCurrentQuestionId} isDoneLoad={isDoneLoad} />
-      )
-    } else if (result) {
+    if (result) {
       return (
         <ResultPage resultDate={result} />
       )
+    } else if (currentQuestionId === 0) {
+      return (
+        <TopPage setCurrentQuestionId={setCurrentQuestionId} setResult={setResult} preResult={preResult} />
+      )
     } else {
       return (
-        <QuestionBase />
+        <QuestionPage
+          currentQuestionId={currentQuestionId}
+          questionList={questionList}
+          answerList={answerList}
+          setCurrentQuestionId={setCurrentQuestionId}
+          setPostAnswerList={setPostAnswerList}
+          setIsDoneAnswer={setIsDoneAnswer}
+          setAnswerList={setAnswerList}
+        />
       )
     }
   }
 
-  const handlePreQuestion = () => {
-    setCurrentQuestionId(currentQuestionId - 1)
-  }
-
-  const handleNextQuestion = () => {
-    setCurrentQuestionId(currentQuestionId + 1)
-  }
-
-  const handleSetAnswer = (questionId ,answerChoiceId) => {
-    const answerObject = {
-      questionId: questionId,
-      answerChoiceId: answerChoiceId,
-    }
-    let cheaked = answerList.filter((e) => {
-      return e.questionId !== questionId
-    })
-    cheaked.push(answerObject)
-    setAnswerList(cheaked)
-    if (questionId + 1 <= questionList.length) {
-      setCurrentQuestionId(questionId + 1)
-    }
-  }
-
-  const handleSubmitScorebord = () => {
-    setPostAnswerList(answerList);
-    setIsDoneAnswer(true)
-  }
-
   return (
-    <MainContainer content={<Content />} />
+    <MainContainer>
+      <Content />
+    </MainContainer>
   );
 }
 
