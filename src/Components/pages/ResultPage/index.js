@@ -28,7 +28,7 @@ const ResultPage = ({resultDate}) => {
       <ResultSummary congnicharType={resultDate.cognichar_type}/>
 
       <FlexBetweenWrapper justifyContentDirective='center'>
-        <a href="/" className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white">戻る</a>
+        <a href="/" className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white cursor-pointer">戻る</a>
       </FlexBetweenWrapper>
     </div>
   )
