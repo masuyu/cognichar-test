@@ -47,7 +47,7 @@ const TopPage = ({ setCurrentQuestionId, setResult, preResult}) => {
         </section>
         <FlexBetweenWrapper justifyContentDirective={"around"}>
           <div className="py-5">
-            <a href="#/" onClick={handleSetCurrentQuestionId} className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white">診断スタート</a>
+            <a href="#/" onClick={handleSetCurrentQuestionId} className="px-4 py-1 border-0 rounded-xl bg-blue-600 hover:bg-blue-200 text-white cursor-pointer">診断スタート</a>
           </div>
         </FlexBetweenWrapper>
         <PreResultLink />

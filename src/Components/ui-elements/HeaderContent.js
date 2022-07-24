@@ -3,7 +3,7 @@ const HeaderContent = ({ text }) => {
   return (
     <section className='py-4'>
       <p className='text-2xl text-white'>
-        {text}
+        <a class="cursor-pointer" href="/">{text}</a>
       </p>
     </section>
   )
